@@ -124,3 +124,4 @@ Diccionario de Selectores:
 
 Esta estructura permite que el servidor escale sin perder velocidad, ya que la respuesta a una petición es la entrega directa de un archivo estático optimizado.
 
+![Diagrama de flujo](/docs/flujo-de-datos-2026-03-25-1248.png)
