@@ -1,0 +1,42 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+
+# Compilación y Salida
+dist/
+build/
+*.tsbuildinfo
+
+# Variables de Entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Datos de Usuario y Almacenamiento (PrivaStream)
+backend/storage/data/*
+!backend/storage/data/.gitkeep
+backend/database.sqlite
+*.db
+*.sqlite
+
+# IDEs y Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Otros
+.gemini/
+/tmp/
