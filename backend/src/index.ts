@@ -1,10 +1,11 @@
-import express from 'express';
+import express, { Request } from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import multer from 'multer';
 
 dotenv.config();
 
@@ -15,6 +16,33 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+// Configuración de Multer para almacenamiento dinámico
+const storage = multer.diskStorage({
+  destination: (req: Request, file: Express.Multer.File, cb) => {
+    let category = 'tex';
+    if (file.mimetype.startsWith('video/')) category = 'video';
+    else if (file.mimetype.startsWith('image/')) category = 'img';
+    else if (file.mimetype.startsWith('audio/')) category = 'audio';
+    
+    const uploadPath = path.join(__dirname, '../storage/data', category);
+    
+    // Asegurar que la categoría existe
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    
+    cb(null, uploadPath);
+  },
+  filename: (req: Request, file: Express.Multer.File, cb) => {
+    // Mantener el nombre original
+    cb(null, file.originalname);
+  }
+});
+
+
+const upload = multer({ storage });
+
 
 // API de Recursos Reales
 app.get('/api/v1/list/:category', (req, res) => {
@@ -59,6 +87,20 @@ app.get('/api/v1/data/:category/:file', (req, res) => {
     res.status(404).send('Archivo físico no encontrado');
   }
 });
+
+// Ruta de subida
+app.post('/api/v1/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No se envió ningún archivo' });
+  }
+  
+  res.json({ 
+    message: 'Archivo subido con éxito', 
+    file: req.file.originalname,
+    path: req.file.path
+  });
+});
+
 
 httpServer.listen(PORT, () => {
   console.log(`[REAL] PrivaStream Backend en http://localhost:${PORT}`);

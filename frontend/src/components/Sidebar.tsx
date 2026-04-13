@@ -1,8 +1,54 @@
+import { useState } from 'react'
 import { Play, Image, Music, FileText, Home, Settings, Plus } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
+import UploadModal from './UploadModal'
+
 
 const Sidebar = () => {
   const location = useLocation();
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle')
+
+  const handleUpload = (file: File) => {
+    setUploadStatus('uploading')
+    setUploadProgress(0)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'http://localhost:5000/api/v1/upload', true)
+
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const percentComplete = Math.round((e.loaded / e.total) * 100)
+        setUploadProgress(percentComplete)
+      }
+    }
+
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        setUploadStatus('success')
+        // Notificar al FileManager para que refresque la lista
+        window.dispatchEvent(new CustomEvent('refresh-library'))
+      } else {
+        setUploadStatus('error')
+      }
+    }
+
+    xhr.onerror = () => {
+      setUploadStatus('error')
+    }
+
+    xhr.send(formData)
+  }
+
+  const openModal = () => {
+    setUploadStatus('idle')
+    setUploadProgress(0)
+    setIsModalOpen(true)
+  }
 
   return (
     <div className="w-64 h-screen bg-background flex flex-col py-4 px-3 space-y-4 relative z-50">
@@ -14,11 +60,23 @@ const Sidebar = () => {
       </div>
 
       <div className="px-3 mb-2">
-        <button className="flex items-center space-x-3 bg-surface hover:bg-[#f6f9fc] text-text-main drive-shadow px-5 py-4 rounded-2xl transition-all">
+        <button 
+          onClick={openModal}
+          className="flex items-center space-x-3 bg-surface hover:bg-[#f6f9fc] text-text-main drive-shadow px-5 py-4 rounded-2xl transition-all"
+        >
           <Plus size={24} />
           <span className="font-medium text-sm">Nuevo</span>
         </button>
       </div>
+
+      <UploadModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onUpload={handleUpload}
+        progress={uploadProgress}
+        status={uploadStatus}
+      />
+
 
       <nav className="flex-1 space-y-1">
         <SidebarItem href="/" icon={<Home size={20} />} label="Inicio" active={location.pathname === '/'} />

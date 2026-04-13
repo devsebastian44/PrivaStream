@@ -34,7 +34,11 @@ const FileManager = ({ category }: { category: string }) => {
     }
 
     fetchFiles()
+
+    window.addEventListener('refresh-library', fetchFiles)
+    return () => window.removeEventListener('refresh-library', fetchFiles)
   }, [category])
+
 
   return (
     <div className="space-y-4 max-w-[1600px] mx-auto">
