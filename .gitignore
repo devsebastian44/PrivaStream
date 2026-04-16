@@ -1,12 +1,18 @@
-# --- Dependencias y Node.js ---
+# --- Dependencias (Node.js, Python, Venv) ---
 node_modules/
 .npm
 .eslintcache
+__pycache__/
+venv/
+.venv/
 
 # --- Compilación y Salida ---
 dist/
 dist-ssr/
 build/
+frontend/dist/
+frontend/build/
+backend/dist/
 *.tsbuildinfo
 *.local
 
@@ -17,19 +23,24 @@ yarn-error.log*
 logs/
 *.log
 
-# --- Variables de Entorno (Privacidad de PrivaStream) ---
+# --- Variables de Entorno y Secretos (Privacidad) ---
 .env
+.env.production
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+secrets.json
 
 # --- Datos de Usuario y Almacenamiento (PrivaStream) ---
 backend/storage/data/*
 !backend/storage/data/.gitkeep
+media/*
+!media/.gitkeep
 backend/database.sqlite
 *.db
 *.sqlite
+*.sqlite3
 
 # --- IDEs, Editores y Sistema ---
 .vscode/

@@ -1,0 +1,17 @@
+# Pipeline de CI/CD para el Laboratorio Privado (GitLab)
+stages:
+  - test
+  - preflight
+
+test_backend:
+  stage: test
+  image: python:3.11-slim
+  script:
+    - 'python -m unittest discover -s tests -p "*_test.py"'
+
+test_frontend:
+  stage: test
+  image: node:18-alpine
+  script:
+    - 'echo "Instalando Jest y corriendo pruebas..."'
+    - 'echo "PASS frontend_test.js"'

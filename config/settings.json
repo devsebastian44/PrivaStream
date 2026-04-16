@@ -1,0 +1,14 @@
+{
+  "app_name": "PrivaStream Media Core",
+  "version": "1.0.0",
+  "features": {
+    "enable_transcoding": true,
+    "enable_hls": true,
+    "allow_public_registration": false
+  },
+  "ffmpeg": {
+    "preset": "veryfast",
+    "threads": 4,
+    "max_bitrate": "3000k"
+  }
+}

@@ -1,66 +1,52 @@
-# 🌌 PrivaStream
-
-Desarrollo de un Servidor de Entretenimiento Local: Un Proyecto de Software Libre y Austero enfocado en la privacidad y la soberanía digital.
-
----
-
-## 🚀 Cómo Ejecutar el Proyecto para Pruebas
-
-Sigue estos pasos para poner en marcha el prototipo tanto en el backend como en el frontend.
-
-### 1. Requisitos Previos
-- Tener instalado **Node.js** (v20 o superior recomendado).
-- Un gestor de paquetes como **npm** (incluido con Node.js).
-
-### 2. Configuración e Inicio del Backend
-El backend se encarga de la indexación de archivos y la API de recursos.
-
-```bash
-# Navegar a la carpeta backend
-cd backend
-
-# Instalar dependencias (solo la primera vez)
-npm install
-
-# Iniciar el servidor en modo desarrollo
-npm run dev
-```
-*El servidor correrá por defecto en `http://localhost:5000`.*
-
-### 3. Configuración e Inicio del Frontend
-El frontend es la interfaz de usuario moderna para navegar e interactuar con tus medios.
-
-```bash
-# Navegar a la carpeta frontend
-cd frontend
-
-# Instalar dependencias (solo la primera vez)
-npm install
-
-# Iniciar la aplicación en modo desarrollo
-npm run dev
-```
-*La aplicación se abrirá usualmente en `http://localhost:3000`.*
+# PrivaStream
+Desarrollo de un Servidor de Entretenimiento Local: Un Proyecto de Software Libre y Austero.
 
 ---
 
-## 📂 Agregando Medios para Pruebas
+## 🚀 Guía Rápida: Cómo Ejecutar y Usar PrivaStream
 
-Para ver el sistema en acción con tus propios archivos, colócalos en las siguientes carpetas dentro de `backend/storage/data/`:
+Este proyecto está construido bajo una arquitectura Zero-Trust y está pensado para desplegarse fácilmente sobre un entorno Linux (ej. Ubuntu/Debian) usando nuestros scripts DevSecOps.
 
-- **Videos**: `backend/storage/data/video/`
-- **Imágenes**: `backend/storage/data/img/`
-- **Audio**: `backend/storage/data/audio/`
-- **Documentos**: `backend/storage/data/tex/`
+### 1. Inicializar la Infraestructura del Servidor
+Toda la configuración pesada de Nginx, seguridad, Firewall y creación de túneles ha sido automatizada. Para ejecutarla:
 
-Al reiniciar el backend o navegar en el frontend, el sistema detectará automáticamente los nuevos archivos.
+1. Ingresa a tu servidor Linux (o entorno WSL/VM local si estás desarrollando).
+2. Ve al directorio del script y dales permisos de ejecución:
+   ```bash
+   cd scripts/
+   chmod +x install.sh
+   ```
+3. Ejecuta el script como administrador (root):
+   ```bash
+   sudo ./install.sh
+   ```
+   > **Nota:** Este script instalará automáticamente las dependencias, configurará e iniciará Nginx, y activará el Firewall (UFW) cerrando todo menos lo esencial.
 
----
+### 2. Conectar al Mundo Exterior (Cloudflare Tunnel)
+Para que puedas acceder desde cualquier parte de internet sin abrir los puertos de tu router:
 
-## 🛠️ Tecnologías Utilizadas
+1. Autentica el daemon de Cloudflare (instalado en el paso anterior) con tu cuenta:
+   ```bash
+   sudo cloudflared tunnel login
+   ```
+2. Crea el túnel dedicado para el streaming:
+   ```bash
+   sudo cloudflared tunnel create privastream
+   ```
+3. Rutéalo a tu dominio:
+   ```bash
+   sudo cloudflared tunnel route dns privastream midominio.com
+   ```
+4. Pon a correr el túnel apuntando a Nginx (Localhost puerto 8080):
+   ```bash
+   cloudflared tunnel run --url http://127.0.0.1:8080 privastream
+   ```
+*(Opcional: Si deseas que el túnel inicie automáticamente al encender el servidor, puedes instalarlo como servicio con `sudo cloudflared service install`)*
 
-- **Frontend**: React, Vite, TypeScript, Tailwind CSS, Framer Motion.
-- **Backend**: Node.js, Express, Socket.io, SQLite.
+### 3. Levantar tus Servicios (Backend / Frontend)
+Todo el tráfico que entra a tu servidor de forma segura ahora es manejado por **Nginx**.
 
----
-**Proyecto coordinado por NextStep Devs - 2026**
+- Nginx espera que tu **Backend/API** esté corriendo en el puerto **3000** interno (`http://127.0.0.1:3000`). Todas las peticiones a `midominio.com/api` irán directo a tu código.
+- Nginx servirá los archivos estáticos subidos a `/media` desde la carpeta `/var/www/privastream/media/`.
+
+Cuando comiences a desarrollar el código de Node, Python o React, colócalos dentro de los directorios `./backend` y `./frontend` e inícialos para probar. Todo es invisible al exterior, salvo a través del dominio protegido que configuraste.
