@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f0f4f9;
+  --color-surface: #ffffff;
+  --color-primary: #c2e7ff;
+  --color-on-primary: #001d35;
+  --color-primary-text: #0b57d0;
+  --color-border: #e0e0e0;
+  --color-text-main: #1f1f1f;
+  --color-text-muted: #444746;
+  --color-hover: rgba(68, 71, 70, 0.08);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.glass {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.drive-shadow {
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+}

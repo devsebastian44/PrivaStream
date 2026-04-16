@@ -1,30 +1,49 @@
-# Dependencias (NUNCA subir esto)
+# --- Dependencias y Node.js ---
 node_modules/
+.npm
+.eslintcache
+
+# --- Compilación y Salida ---
 dist/
 dist-ssr/
+build/
+*.tsbuildinfo
 *.local
 
-# Archivos de log
+# --- Archivos de Log ---
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+logs/
+*.log
 
-# Variables de entorno (Privacidad de Privastream)
+# --- Variables de Entorno (Privacidad de PrivaStream) ---
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Editor (VS Code y otros)
+# --- Datos de Usuario y Almacenamiento (PrivaStream) ---
+backend/storage/data/*
+!backend/storage/data/.gitkeep
+backend/database.sqlite
+*.db
+*.sqlite
+
+# --- IDEs, Editores y Sistema ---
 .vscode/
 .idea/
+*.swp
+*.swo
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
-
-# Archivos del sistema
+.DS_Store
 thumbs.db
 desktop.ini
+
+# --- Otros ---
+.gemini/
+/tmp/
