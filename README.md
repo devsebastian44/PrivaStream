@@ -49,4 +49,30 @@ Todo el tráfico que entra a tu servidor de forma segura ahora es manejado por *
 - Nginx espera que tu **Backend/API** esté corriendo en el puerto **3000** interno (`http://127.0.0.1:3000`). Todas las peticiones a `midominio.com/api` irán directo a tu código.
 - Nginx servirá los archivos estáticos subidos a `/media` desde la carpeta `/var/www/privastream/media/`.
 
-Cuando comiences a desarrollar el código de Node, Python o React, colócalos dentro de los directorios `./backend` y `./frontend` e inícialos para probar. Todo es invisible al exterior, salvo a través del dominio protegido que configuraste.
+Si vas a desarrollar, recuerda instalar dependencias en ambas carpetas (`npm install`).
+
+---
+
+## 🛠️ Configuración Técnica
+
+### Variables de Entorno (.env)
+Copia el archivo `.env.example` a `.env` y ajusta los valores:
+*   **SERVER_PORT**: Puerto donde corre el backend (defecto: 3000).
+*   **MEDIA_UPLOAD_PATH**: Ruta absoluta en Linux donde se guardan los videos (defecto: `/var/www/privastream/media`).
+*   **ALLOWED_HOSTS**: Dominios autorizados para evitar ataques de Host-Header.
+
+### 🧪 Ejecución de Pruebas
+Contamos con una suite de pruebas básicas en la carpeta `/tests`.
+*   **Backend:** `python -m unittest discover -s tests -p "backend_test.py"`
+*   **Frontend:** `npm test` (ver configuración en carpeta frontend).
+
+---
+
+## 🆘 Troubleshooting (Solución de Problemas)
+
+| Problema | Causa Probable | Solución |
+| :--- | :--- | :--- |
+| **Error 502 Bad Gateway** | El Backend de Node.js no está encendido o usa el puerto incorrecto. | Asegura que el backend corre en el puerto 3000 y que `.env` está cargado. |
+| **Permission Denied en subidas** | El servidor Node no tiene permisos de escritura en `/var/www/privastream/media`. | Ejecuta el script `install.sh` y reinicia tu sesión de usuario para aplicar el grupo `www-data`. |
+| **Videos no se reproducen** | Nginx no encuentra los archivos en la ruta del alias. | Verifica que `MEDIA_UPLOAD_PATH` en el backend coincida exactamente con la ruta en `nginx/conf.d/privastream.conf`. |
+| **Túnel no conecta** | Token de Cloudflare expirado o firewall bloqueando salida. | Ejecuta `cloudflared tunnel status` para diagnosticar. |
