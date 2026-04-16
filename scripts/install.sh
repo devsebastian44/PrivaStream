@@ -39,7 +39,10 @@ echo "[3/6] Creando directorios base de PrivaStream (Chown a www-data)..."
 mkdir -p /var/www/privastream/frontend/dist
 mkdir -p /var/www/privastream/media
 chown -R www-data:www-data /var/www/privastream
-chmod -R 755 /var/www/privastream
+chmod -R 775 /var/www/privastream # Permisos 775 para permitir escritura de grupo
+
+# Asegurar que el usuario actual pertenece al grupo www-data para subir archivos sin sudo en el backend
+usermod -aG www-data $SUDO_USER || true
 
 # 4. APLICANDO ARQUITECTURA NGINX
 echo "[4/6] Desplegando Hardening en Nginx..."
