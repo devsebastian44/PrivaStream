@@ -21,7 +21,7 @@ const FileManager = ({ category }: { category: string }) => {
       setLoading(true)
       setSelectedFile(null)
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/list/${category}`)
+        const response = await fetch(`/api/v1/list/${category}`)
         if (!response.ok) throw new Error('Network response was not ok')
         const data = await response.json()
         setFiles(data.lista)
@@ -61,11 +61,11 @@ const FileManager = ({ category }: { category: string }) => {
             </div>
             {category === 'video' ? (
               <div className="max-w-3xl mx-auto">
-                <VideoPlayer src={`http://localhost:5000${selectedFile.url_acceso}`} title={selectedFile.nombre} />
+                <VideoPlayer src={selectedFile.url_acceso} title={selectedFile.nombre} />
               </div>
             ) : category === 'img' ? (
               <div className="flex justify-center max-h-[400px] overflow-hidden bg-[#e9eef6] rounded-xl p-2">
-                <img src={`http://localhost:5000${selectedFile.url_acceso}`} className="object-contain h-full w-auto rounded-lg" alt={selectedFile.nombre} />
+                <img src={selectedFile.url_acceso} className="object-contain h-full w-auto rounded-lg" alt={selectedFile.nombre} />
               </div>
             ) : (
               <div className="bg-[#e9eef6] p-12 rounded-xl text-center text-text-muted">
