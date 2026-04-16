@@ -8,8 +8,6 @@ test_backend:
   image: python:3.11-slim
   script:
     - 'python -m unittest discover -s tests -p "*_test.py"'
-  only:
-    - main
 
 test_frontend:
   stage: test
@@ -17,5 +15,3 @@ test_frontend:
   script:
     - 'echo "Instalando Jest y corriendo pruebas..."'
     - 'echo "PASS frontend_test.js"'
-  only:
-    - main
