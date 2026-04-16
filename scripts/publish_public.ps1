@@ -5,26 +5,23 @@
 
 Write-Host "[*] Iniciando sincronización profesional DevSecOps..." -ForegroundColor Cyan
 
-# 1. Pre-vuelo
+# 1. Pre-vuelo (Validación de rama actual)
 $currentBranch = git rev-parse --abbrev-ref HEAD
-if ($currentBranch -ne "main") {
-    Write-Host "[!] Error: Debes estar en 'main' para publicar." -ForegroundColor Red
-    exit
-}
+Write-Host "[*] Detectada la rama de trabajo actual: $currentBranch" -ForegroundColor Yellow
 
 if (git status --porcelain) {
-    Write-Host "[!] Tienes cambios sin guardar. Haz commit antes de publicar." -ForegroundColor Yellow
+    Write-Host "[!] Tienes cambios sin guardar. Haz commit antes de publicar." -ForegroundColor Red
     exit
 }
 
 # 2. Sincronización Privada
 Write-Host "[*] Asegurando estado en GitLab (Laboratorio Principal)..."
-git pull gitlab main --rebase
-git push gitlab main
+git pull gitlab $currentBranch --rebase
+git push gitlab $currentBranch
 
 # 3. Rama Pública (Aislamiento)
 Write-Host "[*] Creando release sanitizado en rama 'public'..."
-git checkout -B public main
+git checkout -B public $currentBranch
 
 # 4. Filtrado de Archivos (Datos que no deben exponerse)
 Write-Host "[*] Aplicando filtros de seguridad..." -ForegroundColor Cyan
@@ -41,7 +38,7 @@ git push origin public:main --force
 
 # 6. Retorno Seguro
 Write-Host "[*] Volviendo al Laboratorio..."
-git checkout main -f
+git checkout "$currentBranch" -f
 git clean -fd 2>$null
 
 Write-Host "[*] Portafolio actualizado y entorno privado protegido." -ForegroundColor Green
