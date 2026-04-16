@@ -7,7 +7,7 @@ test_backend:
   stage: test
   image: python:3.11-slim
   script:
-    - python -m unittest discover -s tests -p "*_test.py"
+    - 'python -m unittest discover -s tests -p "*_test.py"'
   only:
     - main
 
@@ -15,7 +15,7 @@ test_frontend:
   stage: test
   image: node:18-alpine
   script:
-    - echo "Instalando Jest y corriendo pruebas..."
-    - echo "PASS: frontend_test.js"
+    - 'echo "Instalando Jest y corriendo pruebas..."'
+    - 'echo "PASS frontend_test.js"'
   only:
     - main
