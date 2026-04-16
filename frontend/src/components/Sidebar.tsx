@@ -18,7 +18,7 @@ const Sidebar = () => {
     formData.append('file', file)
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'http://localhost:5000/api/v1/upload', true)
+    xhr.open('POST', '/api/v1/upload', true)
 
     xhr.upload.onprogress = (e) => {
       if (e.lengthComputable) {
